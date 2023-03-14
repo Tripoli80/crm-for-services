@@ -4,13 +4,13 @@ on:
     branches:
       - main
 jobs:
-   deploy:
+  deploy:
     runs-on: ubuntu-latest
-    steps:    
+    steps:
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Run command on remote server
-        uses: D3rHase/ssh-command-action@v0.2.2.4
+        uses: D3rHase/ssh-command-action@v0.2.2
         with:
           host: ${{secrets.IP}}
           user: ${{secrets.USER}}
@@ -20,4 +20,3 @@ jobs:
             sudo git checkout main;
             sudo git pull;
             sudo systemctl daemon-reload
-
