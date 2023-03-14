@@ -19,3 +19,7 @@ jobs:
           REMOTE_USER: ${{ secrets.USER }}
           SSH_PRIVATE_KEY: ${{ secrets.KEY }}
           TARGET: /home/ubuntu/crm-for-services
+            script: |
+            cd /home/ubuntu/crm-for-services
+            npm install --production
+            pm2 restart all
