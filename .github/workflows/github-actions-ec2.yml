@@ -9,14 +9,15 @@ jobs:
     steps:    
       - name: Checkout repo
         uses: actions/checkout@v2
-      - name: Transfer files to EC2
-        uses: easingthemes/ssh-deploy@v2.2.4
-        env:
-          SOURCE: "./"
-          SSH_PRIVATE_KEY: ${{ secrets.KEY }}
-          REMOTE_HOST: ${{ secrets.IP }}
-          REMOTE_USER: ${{ secrets.USER }}
-          TARGET: ${{ secrets.TARGET_DIR }}
+      - name: Run command on remote server
+        uses: D3rHase/ssh-command-action@v0.2.2.4
         with:
-          args: ssh -o StrictHostKeyChecking=no
+          host: ${{secrets.IP}}
+          user: ${{secrets.USER}}
+          private_key: ${{secrets.KEY}}
+          command: |
+            cd ${{ secrets.TARGET_DIR }};
+            sudo git checkout main;
+            sudo git pull;
+            sudo systemctl daemon-reload
 
