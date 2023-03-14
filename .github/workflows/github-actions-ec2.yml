@@ -13,14 +13,14 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup SSH
-        uses: appleboy/ssh-scp-action@master
+        uses: appleboy/ssh-scp-action@main
         with:
           ssh-private-key: ${{ secrets.KEY }}
           host: ${{ secrets.IP }}
           username: ubuntu
 
       - name: Run commands on remote server
-        uses: appleboy/ssh-scp-action@master
+        uses: appleboy/ssh-scp-action@main
         with:
           ssh-private-key: ${{ secrets.KEY }}
           host: ${{ secrets.IP }}
