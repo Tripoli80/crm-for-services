@@ -25,6 +25,6 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             cd ${{ secrets.TARGET_DIR }};
-            sudo git checkout main;
-            sudo git pull;
-            sudo systemctl daemon-reload
+            git checkout main;
+            git pull;
+            systemctl daemon-reload
