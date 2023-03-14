@@ -1,17 +1,33 @@
-name: Deploy to Ubuntu server
+name: CI
+
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
+
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    if: github.ref == 'refs/heads/master'
 
-      - name: Run commands on remote server
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.KEY }} ubuntu@${{ secrets.IP }} 'cd ${{ secrets.TARGET_DIR }} && git checkout main && git pull && systemctl daemon-reload'
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@5.1
+        with:
+          switches: -avzr --delete
+          path: ./*
+          remote_path: ${{ secrets.TARGET_DIR }}
+          remote_host: ${{ secrets.IP }}
+          remote_user: ubuntu
+          remote_key: "${{ secrets.KEY }}"
