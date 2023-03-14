@@ -7,31 +7,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      -  - name: Checkout the files
         uses: actions/checkout@v2
-      - name: Install Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '18.x'
-      - name: Install dependencies
-        run: npm ci
-      - name: Build project
-        run: npm run build
-      - name: Transfer files to EC2
-        uses: Tripoli80/scp-action@v2
-        with:
-          host: ${{ secrets.IP }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.KEY }}
-          source: ./
-          target: /home/ubuntu/crm-for-services
-      - name: Connect to EC2
-        uses: Tripoli80/ssh-action@v1
-        with:
-          host: ${{ secrets.IP }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.KEY }}
-          script: |
-            cd /home/ubuntu/crm-for-services
-            npm install --production
-            pm2 restart all
+
+      - name: Deploy to Server 1
+        uses: easingthemes/ssh-deploy@main
+          env:
+          SSH_PRIVATE_KEY: ${{ secrets.KEY }}
+          REMOTE_HOST: ${{ secrets.IP }}
+          REMOTE_USER: ${{ secrets.USER }}
+          TARGET: ${{ secrets.TARGET_DIR }}
