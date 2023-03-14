@@ -16,6 +16,7 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.0
         with:
           ssh-private-key: ${{ secrets.KEY }}
+          ssh-key-passphrase: ${{ secrets.KEY_PASSPHRASE }}
 
       - name: Run commands on remote server
         uses: appleboy/ssh-action@master
