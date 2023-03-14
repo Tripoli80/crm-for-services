@@ -9,6 +9,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+         uses: webfactory/ssh-agent@v0.5.0
+      with:
+        ssh-private-key: ${{ secrets.KEY }}
       - name: Run command on remote server
         uses: appleboy/ssh-action@master
         with:
