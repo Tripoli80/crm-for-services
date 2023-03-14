@@ -11,5 +11,6 @@ export const generateToken = async (_id) => {
   const payload = { user: _id };
   const token = jwt.sign(payload, secret, { expiresIn: "60m" });
   const longToken = jwt.sign(payload, secret);
+  
   return { token, longToken };
 };
