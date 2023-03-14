@@ -5,8 +5,10 @@ export const tryWrapper = (controller) => {
     controller(req, res, next).catch(next);
   };
 
-  
+
 };
+
+
 
 export const generateToken = async (_id) => {
   const secret = process.env.SECRET;
