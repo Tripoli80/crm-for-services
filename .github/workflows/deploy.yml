@@ -14,8 +14,8 @@ jobs:
 
       - name: Deploy to Server 1
         uses: easingthemes/ssh-deploy@main
-        env:
-          REMOTE_HOST: ${{ secrets.ss.IP }}
-          REMOTE_USER: ${{ secrets.ss.USER }}
-          SSH_PRIVATE_KEY: ${{ secrets.ss.KEY }}
+          with:
+          REMOTE_HOST: ${{ secrets.IP }}
+          REMOTE_USER: ${{ secrets.USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.KEY }}
           TARGET: /home/ubuntu/crm-for-services
