@@ -1,16 +1,32 @@
+name: Deploy to Ubuntu server
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   deploy:
-    name: Deploy to EC2 on master branch push
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout the files
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Deploy to Server 1
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.KEY }}
-          REMOTE_HOST: ${{ secrets.IP }}
-          REMOTE_USER: ubuntu
-          TARGET: ${{ secrets.TARGET_DIR }}
+      - name: Setup SSH
+        uses: appleboy/ssh-scp-action@master
+        with:
+          ssh-private-key: ${{ secrets.KEY }}
+          host: ${{ secrets.IP }}
+          username: ubuntu
+
+      - name: Run commands on remote server
+        uses: appleboy/ssh-scp-action@master
+        with:
+          ssh-private-key: ${{ secrets.KEY }}
+          host: ${{ secrets.IP }}
+          username: ubuntu
+          script: |
+            cd ${{ secrets.TARGET_DIR }}
+            git checkout main
+            git pull
+            systemctl daemon-reload
