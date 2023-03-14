@@ -18,7 +18,7 @@ jobs:
       - name: Run commands on remote server
         run: |
           ssh -i ${{ secrets.KEY }} ubuntu@${{ secrets.IP }} '
-            cd ${{ secrets.TARGET_DIR }};
+            cd /home/ubuntu/crm-for-services;
             git checkout main;
             git pull;
             systemctl daemon-reload
