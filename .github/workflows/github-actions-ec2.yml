@@ -1,25 +1,29 @@
-name: Deploy to EC2
+name: Deploy to Ubuntu server
 on:
   push:
     branches:
       - main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v2
-      - name: Set up SSH key
+
+      - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.0
         with:
           ssh-private-key: ${{ secrets.KEY }}
-      - name: Run command on remote server
+
+      - name: Run commands on remote server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.IP }}
-          user: ${{ secrets.USER }}
-          private_key: ${{ secrets.KEY }}
-          command: |
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.KEY }}
+          script: |
             cd ${{ secrets.TARGET_DIR }};
             sudo git checkout main;
             sudo git pull;
