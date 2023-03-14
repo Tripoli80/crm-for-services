@@ -31,7 +31,6 @@ authService.register = async (email, password, name) => {
 };
 
 authService.logout = async (token) => {
-  console.log("🚀 ~ file: auth-service.js:34 ~ token:", token);
   // Implement logout logic here, e.g. blacklisting the token
 };
 
