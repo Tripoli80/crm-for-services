@@ -5,33 +5,17 @@ on:
       - main
 jobs:
   deploy:
+    name: Deploy to EC2 on master branch push
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: Checkout the files
         uses: actions/checkout@v2
-      - name: Install Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: "18.x"
-      - name: Install dependencies
-        run: npm ci
-      - name: Build project
-        run: npm run start
-      - name: Transfer files to EC2
-        uses: Tripoli80/crm-for-services/scp-action@v2
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          source: ./
-          target: /home/ubuntu/crm-for-services
-      - name: Connect to EC2
-        uses: Tripoli80/crm-for-services/ssh-action@v1
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          script: |
-            cd /home/ubuntu/crm-for-services
-            npm install --production
-            pm2 restart all
+
+      - name: Deploy to Server 1
+        uses: easingthemes/ssh-deploy@main
+        env:
+          REMOTE_HOST: ${{ secrets.EC2_HOST }}
+          REMOTE_USER: ${{ secrets.EC2_USERNAME }}
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+          TARGET: /home/ubuntu/crm-for-services
