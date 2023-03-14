@@ -12,21 +12,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup SSH
-        uses: appleboy/ssh-scp-action@main
-        with:
-          ssh-private-key: ${{ secrets.KEY }}
-          host: ${{ secrets.IP }}
-          username: ubuntu
+      - name: Install SSH client
+        run: sudo apt-get install -y openssh-client
 
       - name: Run commands on remote server
-        uses: appleboy/ssh-scp-action@main
-        with:
-          ssh-private-key: ${{ secrets.KEY }}
-          host: ${{ secrets.IP }}
-          username: ubuntu
-          script: |
-            cd ${{ secrets.TARGET_DIR }}
-            git checkout main
-            git pull
+        run: |
+          ssh -i ${{ secrets.KEY }} ubuntu@${{ secrets.IP }} '
+            cd ${{ secrets.TARGET_DIR }};
+            git checkout main;
+            git pull;
             systemctl daemon-reload
+          '
