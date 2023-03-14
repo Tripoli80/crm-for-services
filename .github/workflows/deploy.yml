@@ -4,9 +4,15 @@ on:
     branches:
       - main
 jobs:
+ name: Print environment variables
+  run: |
+    echo "SSH_PRIVATE_KEY: ${{ secrets.KEY }}"
+    echo "REMOTE_HOST:  ${{ secrets.IP }}"
+    echo "REMOTE_USER:  ${{ secrets.USER }}"
+    echo "TARGET: ${{ secrets.TARGET_DIR }}"
   deploy:
     runs-on: ubuntu-latest
-    steps:
+    steps:    
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Transfer files to EC2
