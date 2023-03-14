@@ -17,6 +17,5 @@ jobs:
           REMOTE_HOST: ${{ secrets.IP }}
           REMOTE_USER: ${{ secrets.USER }}
           TARGET: ${{ secrets.TARGET_DIR }}
-        with:
-          args: ssh -o StrictHostKeyChecking=no
+   
 
