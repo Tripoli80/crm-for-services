@@ -4,13 +4,7 @@ on:
     branches:
       - main
 jobs:
- name: Print environment variables
-  run: |
-    echo "SSH_PRIVATE_KEY: ${{ secrets.KEY }}"
-    echo "REMOTE_HOST:  ${{ secrets.IP }}"
-    echo "REMOTE_USER:  ${{ secrets.USER }}"
-    echo "TARGET: ${{ secrets.TARGET_DIR }}"
-  deploy:
+   deploy:
     runs-on: ubuntu-latest
     steps:    
       - name: Checkout repo
@@ -25,3 +19,9 @@ jobs:
           TARGET: ${{ secrets.TARGET_DIR }}
         with:
           args: ssh -o StrictHostKeyChecking=no
+        name: Print environment variables
+         run: |
+    echo "SSH_PRIVATE_KEY: ${{ secrets.KEY }}"
+    echo "REMOTE_HOST:  ${{ secrets.IP }}"
+    echo "REMOTE_USER:  ${{ secrets.USER }}"
+    echo "TARGET: ${{ secrets.TARGET_DIR }}"
