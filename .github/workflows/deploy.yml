@@ -10,15 +10,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Install Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: "18.x"
       - name: Install dependencies
         run: npm ci
-      - name: Build project
-        run: npm run build
       - name: Transfer files to EC2
-        uses: appleboy/scp-action@master
+        uses: appleboy/scp-action@v2
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
@@ -26,7 +24,7 @@ jobs:
           source: ./
           target: /home/ubuntu/crm-for-services
       - name: Connect to EC2
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
@@ -34,4 +32,4 @@ jobs:
           script: |
             cd /home/ubuntu/crm-for-services
             npm install --production
-            pm2 restart all
+            npm run start
