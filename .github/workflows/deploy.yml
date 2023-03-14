@@ -18,7 +18,7 @@ jobs:
       - name: Build project
         run: npm run start
       - name: Transfer files to EC2
-        uses: Tripoli80/scp-action@v1
+        uses: Tripoli80/scp-action@v2
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
