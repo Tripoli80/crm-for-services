@@ -18,7 +18,7 @@ jobs:
       - name: Build project
         run: npm run start
       - name: Transfer files to EC2
-        uses: Tripoli80/scp-action@v2
+        uses: Tripoli80/crm-for-services@main
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
@@ -26,7 +26,7 @@ jobs:
           source: ./
           target: /home/ubuntu/crm-for-services
       - name: Connect to EC2
-        uses: Tripoli80/ssh-action@v1
+        uses: Tripoli80/crm-for-services@main
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
