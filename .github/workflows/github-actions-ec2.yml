@@ -4,9 +4,9 @@ on:
     branches:
       - main
 jobs:
-  deploy:
+   deploy:
     runs-on: ubuntu-latest
-    steps:
+    steps:    
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Transfer files to EC2
@@ -17,3 +17,6 @@ jobs:
           REMOTE_HOST: ${{ secrets.IP }}
           REMOTE_USER: ${{ secrets.USER }}
           TARGET: ${{ secrets.TARGET_DIR }}
+        with:
+          args: ssh -o StrictHostKeyChecking=no
+
