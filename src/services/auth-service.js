@@ -13,7 +13,7 @@ authService.login = async (email, password) => {
   if (!isMatch) throw new Error("Incorrect password");
 
   const { token, longToken } = await generateToken(user.id);
-  return { token, msg: "test" };
+  return { token, msg: "tes555t" };
 };
 
 authService.register = async (email, password, name) => {
