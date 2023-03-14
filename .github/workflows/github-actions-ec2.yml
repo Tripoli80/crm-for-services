@@ -12,14 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install SSH client
-        run: sudo apt-get install -y openssh-client
-
       - name: Run commands on remote server
         run: |
-          ssh -i ${{ secrets.KEY }} ubuntu@${{ secrets.IP }} '
-            cd /home/ubuntu/crm-for-services;
-            git checkout main;
-            git pull;
-            systemctl daemon-reload
-          '
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.KEY }} ubuntu@${{ secrets.IP }} 'cd ${{ secrets.TARGET_DIR }} && git checkout main && git pull && systemctl daemon-reload'
