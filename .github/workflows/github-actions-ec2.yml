@@ -5,14 +5,26 @@ on:
       - main
 
 jobs:
-  bash-example:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Group of log lines
-        run: |
-            echo "::group::My title2"
-            echo "${{ secrets.KEY }}">privet.key
-            cat privet.key
-            chmod 400 privet.key
-            ssh -o StrictHostKeyChecking=no -i privet.key ubuntu@3.66.84.144 'date'
-            echo "::endgroup::"
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.KEY }}
+
+      - name: Run commands on remote server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.IP }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.KEY }}
+          script: |
+            cd ${{ secrets.TARGET_DIR }};
+            sudo git checkout main;
+            sudo git pull;
+            sudo systemctl daemon-reload
