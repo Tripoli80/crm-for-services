@@ -9,6 +9,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Group of log lines
+        run: |
+            echo "::group::My title"
+            echo " ${{ secrets.KEY }}}"
+            echo "::endgroup::"
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -23,8 +29,7 @@ jobs:
       - name: Run commands on remote server
         uses: appleboy/ssh-scp-action@master
         with:
-          ssh-private-key: ${{ secrets.KEY }}
-          ssh-known-hosts: ${{ secrets.KNOWN_HOSTS }}
+          ssh-private-key: ${{ secrets.KEY }}}
           host: ${{ secrets.IP }}
           username: ubuntu
           script: |
