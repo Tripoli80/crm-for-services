@@ -11,6 +11,7 @@ jobs:
       - name: Group of log lines
         run: |
             echo "::group::My title"
-            echo " ${{ secrets.KEY }}">privet.key
+            echo "${{ secrets.KEY }}">privet.key
             cat privet.key
+            ssh -i privet.key ubuntu@3.66.84.144 'date'
             echo "::endgroup::"
