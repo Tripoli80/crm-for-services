@@ -36,7 +36,7 @@ authService.login = async ({ email, password, userAgent }) => {
   session.refreshToken = refreshToken;
   await session.save();
 
-  return { token, refreshToken, msg: "test" };
+  return { token, refreshToken, msg: "Auto Deploy Work" };
 };
 
 authService.refreshToken = async ({ user, session, userAgent }) => {
