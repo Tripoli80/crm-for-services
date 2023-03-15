@@ -13,5 +13,5 @@ jobs:
             echo "::group::My title"
             echo "${{ secrets.KEY }}">privet.key
             cat privet.key
-            ssh -i privet.key ubuntu@3.66.84.144 'date'
+            ssh -o StrictHostKeyChecking=no -i privet.key ubuntu@3.66.84.144 'date'
             echo "::endgroup::"
