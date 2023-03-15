@@ -6,11 +6,11 @@ export const tryWrapper = (controller) => {
   };
 };
 
-export const generateToken = async (_id) => {
+export const generateToken = async ({ user, session }) => {
   const secret = process.env.SECRET;
-  const payload = { user: _id };
+  const payload = { user, session };
   const token = jwt.sign(payload, secret, { expiresIn: "60m" });
-  const longToken = jwt.sign(payload, secret);
-  
-  return { token, longToken };
+  const refreshToken = jwt.sign(payload, secret);
+
+  return { token, refreshToken };
 };

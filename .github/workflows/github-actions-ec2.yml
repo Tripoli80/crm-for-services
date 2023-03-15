@@ -1,32 +1,34 @@
-name: CI
-
+name: Deploy to Ubuntu server
 on:
   push:
     branches:
       - main
 
-  workflow_dispatch:
-
 jobs:
-  build:
-
+  deploy:
     runs-on: ubuntu-latest
 
-    if: github.ref == 'refs/heads/main'
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: rsync deployments
-        uses: burnett01/rsync-deployments@5.1
+      - name: Setup SSH
+        uses: appleboy/ssh-scp-action@master
         with:
-          switches: -avzr --delete
-          path: ./*
-          remote_path: ${{ secrets.TARGET_DIR }}
-          remote_host: ${{ secrets.IP }}
-          remote_user: ubuntu
-          remote_key: "${{ secrets.KEY }}"
+          ssh-private-key: ${{ secrets.KEY }}
+          ssh-known-hosts: ${{ secrets.KNOWN_HOSTS }}
+          host: ${{ secrets.IP }}
+          username: ubuntu
+
+      - name: Run commands on remote server
+        uses: appleboy/ssh-scp-action@master
+        with:
+          ssh-private-key: ${{ secrets.KEY }}
+          ssh-known-hosts: ${{ secrets.KNOWN_HOSTS }}
+          host: ${{ secrets.IP }}
+          username: ubuntu
+          script: |
+            cd ${{ secrets.TARGET_DIR }}
+            git checkout main
+            git pull
+            systemctl daemon-reload

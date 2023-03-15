@@ -12,9 +12,6 @@ app.use(bodyParser.json());
 app.use("/api/auth", authRouter);
 app.use("/api/events", auth, eventsRouter);
 
-// app.use('/',(req, res) => {
-//   res.status(200).json({ message: "Hello assa" });
-// });
 
 app.use((error, req, res, next) => {
   console.error(error);

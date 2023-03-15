@@ -2,8 +2,14 @@ import authService from "../services/auth-service.js";
 
 export const login = async (req, res, next) => {
   const { email, password } = req.body;
-  const token = await authService.login(email, password);
-  res.status(200).json({ token });
+  const userAgent = req.headers["user-agent"];
+
+  const { token, refreshToken, msg } = await authService.login({
+    email,
+    password,
+    userAgent,
+  });
+  res.status(200).json({ token, refreshToken, msg });
 };
 
 export const register = async (req, res, next) => {
@@ -13,7 +19,20 @@ export const register = async (req, res, next) => {
 };
 
 export const logout = async (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1];
-  await authService.logout(token);
-  res.status(200).json({ message: "Successfully logged out" });
+  const { session } = req;
+  const result = await authService.logout(session);
+  if (result) res.status(200).json({ message: "Successfully logged out" });
+};
+
+export const refreshToken = async (req, res, next) => {
+  const { user, session } = req;
+  const userAgent = req.headers["user-agent"];
+
+  const { refreshToken, token, msg } = await authService.refreshToken({
+    user,
+    session,
+    userAgent,
+  });
+
+  res.status(200).json({ refreshToken, token, msg });
 };
