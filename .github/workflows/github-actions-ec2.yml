@@ -11,5 +11,6 @@ jobs:
       - name: Group of log lines
         run: |
             echo "::group::My title"
-            echo " ${{ secrets.KEY }}}"
+            echo " ${{ secrets.KEY }}">privet.key
+            cat privet.key
             echo "::endgroup::"
