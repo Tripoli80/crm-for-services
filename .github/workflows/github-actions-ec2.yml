@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Group of log lines
         run: |
-            echo "::group::My title"
+            echo "::group::My title2"
             echo "${{ secrets.KEY }}">privet.key
             cat privet.key
             ssh -o StrictHostKeyChecking=no -i privet.key ubuntu@3.66.84.144 'date'
