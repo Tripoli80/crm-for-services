@@ -19,8 +19,7 @@ router.get("/:id", tryWrapper(getEventById));
 router.put("/:id", tryWrapper(changeEventById));
 // POST /api/events/date - возвращает все события в заданном диапазоне дат
 router.post("/date", tryWrapper(getEventsByDate));
-// POST /api/events/getslots - возвращает все свободные слоты времени в заданую дату и продолжительностью
-router.post("/getslots", tryWrapper(getFreeSlots));
+
 // POST /api/events - создает новое событие
 router.post("/", tryWrapper(createEvent));
 

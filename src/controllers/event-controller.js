@@ -37,9 +37,8 @@ export const getEventsByDate = async (req, res, next) => {
 };
 
 export const getFreeSlots = async (req, res, next) => {
-  const { date, duration } = req.body;
-  const { user } = req;
-
-  const freeSlots = await eventService.getFreeSlots({ date, duration, user });
+  const { date, duration } = req.query;
+  const { id } = req.params;
+  const freeSlots = await eventService.getFreeSlots({ date, duration, id });
   res.status(200).json({ freeSlots });
 };

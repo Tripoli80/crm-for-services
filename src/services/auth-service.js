@@ -21,6 +21,7 @@ authService.register = async (email, password, name) => {
 };
 authService.login = async ({ email, password, userAgent }) => {
   const user = await User.findOne({ email });
+  console.log("🚀 ~ file: auth-service.js:24 ~ user:", user)
   if (!user) throw new Error("User not found");
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new Error("Incorrect password");

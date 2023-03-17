@@ -48,9 +48,7 @@ eventService.getEventsByDate = async ({ start, end, user }) => {
 
 eventService.getFreeSlots = async ({ duration, date, user }) => {
   const startTime = moment(date).startOf("day");
-  console.log("🚀 ~ file: event-service.js:36 ~ startTime:", startTime);
   const endTime = moment(date).endOf("day");
-  console.log("🚀 ~ file: event-service.js:37 ~ endTime:", endTime);
   const events = await Event.find({
     user: user, // ID пользователя
     start: { $gte: startTime }, // События начинаются после стартового времени
