@@ -1,5 +1,6 @@
 import Event from "../models/event.js";
 import moment from "moment";
+import { chekValidObjectID } from "../utils/index.js";
 
 const eventService = {};
 
@@ -22,6 +23,20 @@ eventService.getEventById = async ({ id, user }) => {
   return event;
 };
 
+eventService.changeEventById = async ({ id, body }) => {
+  const { title, start, end, desc } = body;
+  const filter = { _id: id };
+  const update = { title, start, end, end, desc };
+  const { modifiedCount, matchedCount } = await Event.updateOne(filter, update);
+  if (+matchedCount > 0) {
+    if (+modifiedCount > 0) {
+      return { massege: "Update sucsess" };
+    }
+    return { massege: "Nothitg to update" };
+  }
+  return { massege: "Event not found" };
+};
+
 eventService.getEventsByDate = async ({ start, end, user }) => {
   const events = await Event.find({
     user: user,
@@ -31,11 +46,11 @@ eventService.getEventsByDate = async ({ start, end, user }) => {
   return events;
 };
 
-eventService.getFreeSlots = async ({duration, date, user}) => {
+eventService.getFreeSlots = async ({ duration, date, user }) => {
   const startTime = moment(date).startOf("day");
-  console.log("🚀 ~ file: event-service.js:36 ~ startTime:", startTime)
+  console.log("🚀 ~ file: event-service.js:36 ~ startTime:", startTime);
   const endTime = moment(date).endOf("day");
-  console.log("🚀 ~ file: event-service.js:37 ~ endTime:", endTime)
+  console.log("🚀 ~ file: event-service.js:37 ~ endTime:", endTime);
   const events = await Event.find({
     user: user, // ID пользователя
     start: { $gte: startTime }, // События начинаются после стартового времени

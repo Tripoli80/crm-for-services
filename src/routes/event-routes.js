@@ -5,6 +5,7 @@ import {
   getEventById,
   getEventsByDate,
   getFreeSlots,
+  changeEventById,
 } from "../controllers/event-controller.js";
 import { tryWrapper } from "../utils/index.js";
 
@@ -14,6 +15,8 @@ const router = express.Router();
 router.get("/", tryWrapper(getAllEvents));
 // GET /api/events/:id - возвращает событие по id
 router.get("/:id", tryWrapper(getEventById));
+// GET /api/events/:id - возвращает событие по id
+router.put("/:id", tryWrapper(changeEventById));
 // POST /api/events/date - возвращает все события в заданном диапазоне дат
 router.post("/date", tryWrapper(getEventsByDate));
 // POST /api/events/getslots - возвращает все свободные слоты времени в заданую дату и продолжительностью
