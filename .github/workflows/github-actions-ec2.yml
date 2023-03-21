@@ -26,6 +26,7 @@ jobs:
           script: |
             cd ${{ secrets.TARGET_DIR }};
             sudo git checkout main;
-            sudo git pull;
+            sudo git fetch origin main;
+            sudo git reset --hard origin/main
             sudo npm install;
             sudo systemctl restart ${{ secrets.NAME_SERVICES }}
