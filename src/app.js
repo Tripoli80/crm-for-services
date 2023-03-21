@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth-routes.js";
 import eventsRouter from "./routes/event-routes.js";
 import freeEventsRouter from "./routes/freeEvent-routes.js";
@@ -18,6 +19,7 @@ const apiLimiter = rateLimit({
 const app = express();
 
 app.use(cors());
+app.use(cookieParser());
 app.use("/api", apiLimiter);
 
 app.use(bodyParser.json());

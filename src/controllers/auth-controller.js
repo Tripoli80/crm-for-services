@@ -4,13 +4,13 @@ export const login = async (req, res, next) => {
   const { email, password } = req.body;
   const userAgent = req.headers["user-agent"];
 
-
-  const { token, refreshToken, msg } = await authService.login({
+  const { token, refreshToken } = await authService.login({
     email,
     password,
     userAgent,
   });
-  res.status(200).json({ token, refreshToken, msg });
+  res.cookie("refreshToken", refreshToken, { httpOnly: true });
+  res.status(200).json({ token });
 };
 
 export const register = async (req, res, next) => {
@@ -29,11 +29,11 @@ export const refreshToken = async (req, res, next) => {
   const { user, session } = req;
   const userAgent = req.headers["user-agent"];
 
-  const { refreshToken, token, msg } = await authService.refreshToken({
+  const { refreshToken, token } = await authService.refreshToken({
     user,
     session,
     userAgent,
   });
-
-  res.status(200).json({ refreshToken, token, msg });
+  res.cookie("refreshToken", refreshToken, { httpOnly: true });
+  res.status(200).json({ token });
 };

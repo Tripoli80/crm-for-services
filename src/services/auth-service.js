@@ -52,7 +52,6 @@ authService.refreshToken = async ({ user, session, userAgent }) => {
   return {
     token,
     refreshToken,
-    msg: `refresh session ${session} ${curentSession.id}`,
   };
 };
 

@@ -34,14 +34,16 @@ const auth = async (req, res, next) => {
 
 const refreshAuth = async (req, res, next) => {
   // Get the token from the request headers
-  const authHeader = req.headers["authorization"];
-  const token = authHeader?.split(" ")[1];
-  const { SECRET } = process.env;
-
+  // const authHeader = req.headers["authorization"];
+   const token = req.cookies.refreshToken;
+  //  if (!token) return res.sendStatus(401);
+  // const token = authHeader?.split(" ")[1];
+  
   // If the token is not present, send a 401 unauthorized response
   if (!token) {
     return res.status(401).send({ message: "Unauthorized: No token provided" });
   }
+  const { SECRET } = process.env;
 
   // Verify the token using the secret key
   jwt.verify(token, SECRET, async (err, decoded) => {
