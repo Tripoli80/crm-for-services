@@ -28,5 +28,6 @@ jobs:
             sudo git checkout main;
             sudo git fetch origin main;
             sudo git reset --hard origin/main
-            sudo npm install;
+            sudo chmod -R 777 .;
+            npm install;
             sudo systemctl restart ${{ secrets.NAME_SERVICES }}
