@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 
 import User from "../models/user.js";
 import Session from "../models/session.js";
-import { generateToken } from "../utils/index.js";
+import { generateToken, hashedPassword } from "../utils/index.js";
 
 const authService = {};
 
@@ -10,8 +10,8 @@ authService.register = async (email, password, name) => {
   const existingUser = await User.findOne({ email });
   if (existingUser) throw new Error("User already exists");
 
-  const hashedPassword = await bcrypt.hash(password, 12);
-  const user = new User({ email, password: hashedPassword, name });
+  const hash = await hashedPassword(password);
+  const user = new User({ email, password: hash, name });
   const createdUser = await user.save();
 
   return {

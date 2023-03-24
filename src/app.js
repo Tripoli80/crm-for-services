@@ -8,11 +8,35 @@ import freeEventsRouter from "./routes/freeEvent-routes.js";
 import { auth } from "./middleware/index.js";
 import rateLimit from "express-rate-limit";
 
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger.json" assert { type: "json" };import userRouter from "./routes/user-routes.js";
+;
+
+
+// const swaggerDefinition = {
+//   info: {
+//     title: "Example API",
+//     version: "1.0.0",
+//     description: "An example API for demonstrating Swagger",
+//   },
+// };
+
+// const options = {
+//   swaggerDefinition,
+//   apis: ["./routes/*.js"],
+// };
+// const swaggerSpec = swaggerJSDoc(options);
+///////////////////////
+
+
+
 const apiLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 минута
   max: 100, // максимальное количество запросов за 1 минуту
   message: "Too many requests from your IP, please try again later.",
 });
+
 
 // Apply the rate limiting middleware to API calls only
 
@@ -23,11 +47,18 @@ app.use(cookieParser());
 app.use("/api", apiLimiter);
 
 app.use(bodyParser.json());
+
 app.use("/api/auth", authRouter);
 
-app.use("/api/events", auth, eventsRouter);
-app.use("/api/events/:id/", freeEventsRouter);
 
+app.use("/api/user",auth, userRouter);
+app.use("/api/events", auth, eventsRouter);
+
+app.use("/api/:id/events/", freeEventsRouter);
+
+// Add Swagger UI
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 

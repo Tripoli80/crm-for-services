@@ -1,9 +1,26 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   name: {
     type: String,
     required: true,
+    trim: true,
+  },
+  phone: {
+    type: String,
+    default: "",
+    trim: true,
+  },
+  age: {
+    type: Number,
+    default: 18,
+
+    trim: true,
+  },
+  description: {
+    type: String,
+    default: "",
+
     trim: true,
   },
   email: {
@@ -13,6 +30,7 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     trim: true,
   },
+  customfield: { type: Schema.Types.Mixed },
   password: {
     type: String,
     required: true,
@@ -20,6 +38,6 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model("User", userSchema);
+const User = model("User", userSchema);
 
 export default User;
