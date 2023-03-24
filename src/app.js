@@ -11,6 +11,7 @@ import rateLimit from "express-rate-limit";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json" assert { type: "json" };import userRouter from "./routes/user-routes.js";
+import clientRouter from "./routes/client-routes.js";
 ;
 
 
@@ -51,7 +52,9 @@ app.use(bodyParser.json());
 app.use("/api/auth", authRouter);
 
 
-app.use("/api/user",auth, userRouter);
+app.use("/api/user", auth, userRouter);
+app.use("/api/client", clientRouter);
+
 app.use("/api/events", auth, eventsRouter);
 
 app.use("/api/:id/events/", freeEventsRouter);
@@ -59,6 +62,7 @@ app.use("/api/:id/events/", freeEventsRouter);
 // Add Swagger UI
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
 
 
