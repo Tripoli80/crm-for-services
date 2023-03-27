@@ -1,62 +1,150 @@
-import bcrypt from "bcryptjs";
+import Client from "../models/client.js";
+import { isNumeric } from "../utils/index.js";
 
-import User from "../models/user.js";
-import Session from "../models/session.js";
-import { hashedPassword } from "../utils/index.js";
-const userService = {};
+const clientService = {};
 
-userService.get = async (id) => {
-  const user = await User.findById(id).select("-password");
-  if (!user) throw new Error("User not found");
-  return user;
+clientService.get = async (clientId) => {
+  const client = await Client.findById(clientId);
+  if (!client) throw new Error("Client not found");
+  return client;
 };
 
-userService.update = async ({
-  _id,
-  email,
-  name,
-  age,
-  description,
-  phone,
-  customfield,
-}) => {
-  const filter = { _id };
-  const update = { email, name, age, description, phone, customfield };
-  const user = await User.findOneAndUpdate(filter, update, {
-    new: true,
-  }).select("-password");
-  if (!user) throw new Error("User not found");
+clientService.searchClient = async ({ query = "", page = 1 }) => {
+  const PAGE_SIZE = 10;
+  if (!isNumeric(page)) page = 1;
+  page = Number(page);
 
-  return user;
-};
+  const schema = Client.schema;
+  const fields = Object.keys(schema.paths);
 
-userService.delete = async (user) => {
-  const deletedUser = await User.findByIdAndRemove(user);
-  if (!deletedUser) {
-    throw new Error("User not found");
-  }
-  await Session.deleteMany({ user: user });
-  return { deletedUser };
-};
+  let filters = [];
+  if (query.length < 3 && query.length > 0)
+    throw new Error("Search query should be at least 3 characters long");
 
-userService.changePassword = async ({ id, password, newPassword }) => {
-  const user = await User.findById(id);
-  if (!user) {
-    throw new Error("User not found");
+  if (query.length >= 3) {
+    filters = fields
+      .filter((field) => schema.paths[field].instance === "String")
+      .map((field) => ({ [field]: { $regex: query, $options: "i" } }));
+
+    // Добавляем условия для поиска по телефону и вложенным полям в customfield
+    filters.push({ phone: { $regex: query, $options: "i" } });
+    filters.push({ "customfield.value": { $regex: query, $options: "i" } });
   }
 
-  // Проверяем, что текущий пароль введен правильно
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new Error("Incorrect password");
+  const totalClients = await Client.countDocuments(
+    filters.length > 0 ? { $or: filters } : {}
+  );
+  const totalPages = Math.ceil(totalClients / PAGE_SIZE);
+  const skip = (page - 1) * PAGE_SIZE;
 
-  const hash = await hashedPassword(newPassword);
-  user.password = hash;
-  const updatedUser = await user.save();
-  await Session.deleteMany({ user: id });
+  let clients = [];
 
-  return {
-    message: "Password sucsess changed. All session removed",
-    updatedUser,
-  };
+  if (filters.length > 0) {
+    clients = await Client.find({ $or: filters })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(PAGE_SIZE);
+  } else {
+    clients = await Client.find({})
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(PAGE_SIZE);
+  }
+
+  return { clients, page, totalPages, totalClients };
 };
-export default userService;
+
+
+clientService.createClient = async ({ phone, firstName }) => {
+  const filter = { phone };
+  let isNew = false;
+  let client = await Client.findOne(filter);
+  if (!client) {
+    client = new Client({ phone, firstName });
+    await client.save();
+    isNew = true;
+  }
+  return { client, isNew };
+};
+
+clientService.checkAndCreate = async ({ phone, firstName }) => {
+  const filter = { phone };
+  let isNew = false;
+  let client = await Client.findOne(filter);
+  if (!client) {
+    client = new Client({ phone, firstName });
+    await client.save();
+    isNew = true;
+  }
+  return { client, isNew };
+};
+
+clientService.addEvents = async ({ clientId, eventId }) => {
+  const session = await Client.startSession();
+  session.startTransaction();
+
+  try {
+    const filter = { _id: clientId };
+    const update = { $addToSet: { events: eventId } };
+    const options = { new: true };
+
+    const client = await Client.findOneAndUpdate(
+      filter,
+      update,
+      options
+    ).session(session);
+    if (!client) throw new Error("Client not found");
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return client.events;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    throw error;
+  }
+};
+
+clientService.update = async ({ _id, ...rest }) => {
+  const session = await Client.startSession();
+  session.startTransaction();
+
+  try {
+    const filter = { _id };
+
+    // Проверяем наличие поля, которое нужно обновить
+    const validFields = Object.keys(rest).filter((field) =>
+      Client.schema.paths.hasOwnProperty(field)
+    );
+    if (validFields.length === 0) {
+      throw new Error("At least one valid field must be provided for update");
+    }
+
+    const update = { ...rest };
+    const client = await Client.findOneAndUpdate(filter, update, {
+      new: true,
+    }).session(session);
+    if (!client) throw new Error("Client not found");
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return client;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    throw error;
+  }
+};
+
+clientService.delete = async (clientId) => {
+  const deletedClient = await Client.findByIdAndRemove(clientId);
+  if (!deletedClient) {
+    throw new Error("Client not found");
+  }
+  return { deletedClient };
+};
+export default clientService;

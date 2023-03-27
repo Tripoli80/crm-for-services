@@ -7,7 +7,6 @@ const clientSchema = new Schema(
     },
     lastName: {
       type: String,
-      required: true,
     },
     phone: {
       type: String,
@@ -16,8 +15,6 @@ const clientSchema = new Schema(
     },
     email: {
       type: String,
-      required: true,
-      unique: true,
     },
     address: {
       type: String,
@@ -28,15 +25,16 @@ const clientSchema = new Schema(
     },
     gender: {
       type: String,
-      enum: ["male", "female"],
-      default: "",
+      enum: ["male", "female", "---"],
+      default: "---",
     },
     events: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "events",
       },
     ],
+    customfield: { type: Schema.Types.Mixed },
   },
   { timestamps: true }
 );

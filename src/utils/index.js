@@ -27,3 +27,5 @@ export const hashedPassword = async (password) => {
   const hesh = await bcrypt.hash(password, 12);
   return hesh;
 };
+
+export const isNumeric = (n) => !isNaN(n);
