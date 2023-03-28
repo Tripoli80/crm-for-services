@@ -9,21 +9,41 @@ export const addService = async (req, res) => {
 };
 
 export const getServices = async (req, res) => {
-  const services = await servicesService.getAll();
+  const { user } = req;
+
+  const services = await servicesService.getAll({ user });
   res.status(200).json(services);
 };
 
 export const getServiceById = async (req, res) => {
-  const service = await servicesService.getById(req.params.id);
+  const {
+    user,
+    params: { id },
+  } = req;
+  const payload = { user, id };
+  const service = await servicesService.getById(payload);
   res.status(200).json(service);
 };
 
 export const updateService = async (req, res) => {
-  const updatedService = await servicesService.update(req.params.id, req.body);
+  const {
+    body,
+    user,
+    params: { id },
+  } = req;
+  const payload = { body, user, id };
+
+  const updatedService = await servicesService.update(payload);
+  if (!updatedService) throw new Error("Service not found");
+
   res.status(200).json(updatedService);
 };
 
 export const deleteService = async (req, res) => {
-  await servicesService.remove(req.params.id);
-  res.status(200).json({ message: "Service deleted successfully" });
+  const remmovedService = await servicesService.remove(req.params.id);
+  if (!remmovedService) throw new Error("Service not found");
+
+  res
+    .status(200)
+    .json({ message: "Service deleted successfully", remmovedService });
 };

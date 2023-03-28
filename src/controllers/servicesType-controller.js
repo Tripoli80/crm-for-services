@@ -23,10 +23,16 @@ export const updateServiceType = async (req, res) => {
     req.params.id,
     req.body
   );
+  if (!updatedServiceType) throw new Error("ServiceType not found");
+
   res.status(200).json(updatedServiceType);
 };
 
 export const deleteServiceType = async (req, res) => {
-  await servicesTypeService.remove(req.params.id);
-  res.status(200).json({ message: "Service type deleted successfully" });
+  const removedServiceType =await servicesTypeService.remove(req.params.id);
+  if (!removedServiceType) throw new Error("ServiceType not found");
+
+  res
+    .status(200)
+    .json({ message: "Service type deleted successfully", removedServiceType });
 };

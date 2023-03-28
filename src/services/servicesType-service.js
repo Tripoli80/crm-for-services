@@ -17,7 +17,8 @@ export const add = async (serviceData) => {
 };
 
 export const getAll = async () => {
-  const serviceTypes = await ServiceType.find().populate("user");
+  const resUserField = "name phone email";
+  const serviceTypes = await ServiceType.find().populate("user", resUserField);
   return serviceTypes;
 };
 

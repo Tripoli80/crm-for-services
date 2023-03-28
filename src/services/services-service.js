@@ -17,29 +17,38 @@ export const add = async (serviceData) => {
   return await service.save();
 };
 
-export const getAll = async () => {
+export const getAll = async ({ user }) => {
   const resCurrencyField = "titel rate code";
   const resUserField = "name phone email";
-  const resServiceTypeField = ''
+  const resServiceTypeField = "";
 
-  return await Service.find()
+  return await Service.find({
+    user,
+  })
     .populate("user", resUserField)
     .populate("serviceType", resServiceTypeField)
     .populate("price.currency", resCurrencyField);
 };
 
-export const getById = async (id) => {
-  return await Service.findById(id)
-    .populate("user")
+export const getById = async ({ id, user }) => {
+  const resUserField = "name";
+  const resCurrencyField = "titel rate code";
+
+  return await Service.find({ _id: id, user })
+    .populate("user", resUserField)
     .populate("serviceType")
-    .populate("price.currency");
+    .populate("price.currency", resCurrencyField);
 };
 
-export const update = async (id, serviceData) => {
-  return await Service.findByIdAndUpdate(id, serviceData, {
-    new: true,
-    runValidators: true,
-  });
+export const update = async ({ body, user, id }) => {
+  return await Service.findOneAndUpdate(
+    { _id: id, user },
+    { ...body },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 };
 
 export const remove = async (id) => {
