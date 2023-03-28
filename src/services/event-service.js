@@ -4,9 +4,9 @@ import { chekValidObjectID } from "../utils/index.js";
 
 const eventService = {};
 
-eventService.getAllEvents = async (req, res) => {
-  const events = await Event.find({});
-  return events;
+eventService.getAllEvents = async (user) => {
+  const events = await Event.find({ user }).populate("user");
+  return events
 };
 
 eventService.createEvent = async ({ title, start, end, desc, user }) => {

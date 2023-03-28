@@ -2,7 +2,7 @@ import eventService from "../services/event-service.js";
 import { chekValidObjectID } from "../utils/index.js";
 
 export const getAllEvents = async (req, res, next) => {
-  const events = await eventService.getAllEvents();
+  const events = await eventService.getAllEvents(req.user);
   res.status(200).json({ events });
 };
 

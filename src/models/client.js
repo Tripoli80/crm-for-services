@@ -39,6 +39,6 @@ const clientSchema = new Schema(
   { timestamps: true }
 );
 
-const Client = model("Client", clientSchema);
+const Client = model("client", clientSchema);
 
 export default Client;

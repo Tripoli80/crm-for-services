@@ -13,6 +13,22 @@ const eventSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  status: {
+    type: String,
+    required: true,
+    default: "new",
+  },
+  amount: {
+    count: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    currency: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "currency",
+    },
+  },
   desc: {
     type: String,
     required: true,
@@ -25,8 +41,9 @@ const eventSchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: "client",
   },
+  customfield: { type: mongoose.Schema.Types.Mixed },
 });
 
-const Event = mongoose.model("Event", eventSchema);
+const Event = mongoose.model("event", eventSchema);
 
 export default Event;
