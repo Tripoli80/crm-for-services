@@ -7,9 +7,9 @@ export const getAllEvents = async (req, res, next) => {
 };
 
 export const createEvent = async (req, res, next) => {
-  const { title, start, end, desc } = req.body;
+  const { title, start, end, desc, client } = req.body;
   const { user } = req;
-  const data = { title, start, end, desc, user };
+  const data = { title, start, end, desc, client, user };
   const event = await eventService.createEvent(data);
   res.status(201).json(event);
 };

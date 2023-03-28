@@ -9,8 +9,8 @@ eventService.getAllEvents = async (user) => {
   return events
 };
 
-eventService.createEvent = async ({ title, start, end, desc, user }) => {
-  const newEvent = new Event({ title, start, end, desc, user });
+eventService.createEvent = async ({ title, client, start, end, desc, user }) => {
+  const newEvent = new Event({ title, start, end, desc, user, client });
   const event = await newEvent.save();
   return event;
 };
@@ -24,9 +24,9 @@ eventService.getEventById = async ({ id, user }) => {
 };
 
 eventService.changeEventById = async ({ id, body }) => {
-  const { title, start, end, desc } = body;
+  const { title, start, end, desc, client } = body;
   const filter = { _id: id };
-  const update = { title, start, end, end, desc };
+  const update = { title, start, end, end, desc, client };
   const { modifiedCount, matchedCount } = await Event.updateOne(filter, update);
   if (+matchedCount > 0) {
     if (+modifiedCount > 0) {
