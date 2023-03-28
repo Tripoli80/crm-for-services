@@ -5,18 +5,25 @@ import { chekValidObjectID } from "../utils/index.js";
 const eventService = {};
 
 eventService.getAllEvents = async (user) => {
-  const events = await Event.find({ user }).populate("user");
+  const events = await Event.find({ user })
+    .populate("user")
+    .populate("client")
+    .populate("amount.currency");
+  
   return events
 };
 
-eventService.createEvent = async ({ title, client, start, end, desc, user }) => {
-  const newEvent = new Event({ title, start, end, desc, user, client });
+eventService.createEvent = async ({ body ,user }) => {
+  const newEvent = new Event({...body, user });
   const event = await newEvent.save();
   return event;
 };
 
 eventService.getEventById = async ({ id, user }) => {
-  const event = await Event.findOne({ _id: id, user });
+  const event = await Event.findOne({ _id: id, user })
+    .populate("user")
+    .populate("client")
+    .populate("amount.currency");;
   if (!event) {
     return { msg: "Event not found" };
   }
