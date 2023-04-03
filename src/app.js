@@ -44,7 +44,6 @@ const apiLimiter = rateLimit({
 const app = express();
 // Настройки CORS
 const corsOptions = {
-  origin: '*', // Указывает, что запросы могут приходить с любого домена
   credentials: true, // Указывает, что сервер может отправлять куки в ответ на запросы с другого домена
 };
 app.use(cors(corsOptions));
