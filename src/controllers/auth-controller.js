@@ -20,7 +20,10 @@ export const login = async (req, res, next) => {
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    domain: "localhost", // разрешить доступ к кукам с других доменов
+    secure: false, // для использования HTTPS
+    domain: "localhost",
+    path: "/",
+    sameSite: "none", // разрешить доступ к кукам с других доменов
   });
   res.status(200).json({ token });
 };
@@ -57,7 +60,10 @@ export const refreshToken = async (req, res, next) => {
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    domain: "localhost", // разрешить доступ к кукам с других доменов
+    secure: false, // для использования HTTPS
+    domain: "localhost",
+    path: "/",
+    sameSite: "none", // разрешить доступ к кукам с других доменов
   });
   res.status(200).json({ token });
 };
