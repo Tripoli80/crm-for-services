@@ -20,7 +20,7 @@ export const login = async (req, res, next) => {
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: false,
+    Secure,
 
     sameSite: "none", // разрешить доступ к кукам с других доменов
   });
@@ -59,7 +59,7 @@ export const refreshToken = async (req, res, next) => {
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure:false,
+    Secure,
     sameSite: "none", // разрешить доступ к кукам с других доменов
   });
   res.status(200).json({ token });
