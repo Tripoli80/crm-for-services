@@ -20,8 +20,8 @@ export const login = async (req, res, next) => {
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
+    domain: ["localhost:3000"],
     path: "/",
-    domain: ["localhost:3000", "yourotherdomain.com"],
   });
   res.status(200).json({ token });
 };
@@ -56,6 +56,10 @@ export const refreshToken = async (req, res, next) => {
     session,
     userAgent,
   });
-  res.cookie("refreshToken", refreshToken, { httpOnly: true });
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    domain: ["localhost:3000"],
+    path: "/",
+  });
   res.status(200).json({ token });
 };
