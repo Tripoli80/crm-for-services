@@ -19,9 +19,8 @@ export const login = async (req, res, next) => {
     userAgent,
   });
   res.cookie("refreshToken", refreshToken, {
-    domain: "3.66.84.144",
-    path: "/",
-    httpOnly: true, // разрешить доступ к кукам с других доменов
+    httpOnly: true,
+    domain: "localhost", // разрешить доступ к кукам с других доменов
   });
   res.status(200).json({ token });
 };
@@ -57,9 +56,8 @@ export const refreshToken = async (req, res, next) => {
     userAgent,
   });
   res.cookie("refreshToken", refreshToken, {
-    domain: "3.66.84.144",
-    path: "/",
-    httpOnly: true, // разрешить доступ к кукам с других доменов
+    httpOnly: true,
+    domain: "localhost", // разрешить доступ к кукам с других доменов
   });
   res.status(200).json({ token });
 };
