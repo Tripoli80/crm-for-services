@@ -1,5 +1,4 @@
-// Dependencies
-const express = require("express");
+import express from "express";
 
 // Configure & Run the http server
 const app = express();
