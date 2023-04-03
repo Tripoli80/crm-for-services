@@ -22,8 +22,8 @@ export const login = async (req, res, next) => {
     httpOnly: true,
     sameSite: "none",
     secure: false,
-    domain: "localhost:3000",
-    path:"/"
+    domain: "3.66.84.144",
+    path: "/",
   });
   res.status(200).json({ token });
 };
@@ -62,7 +62,7 @@ export const refreshToken = async (req, res, next) => {
     httpOnly: true,
     sameSite: "none",
     secure: false,
-    domain: "localhost:3000",
+    domain: "3.66.84.144",
     path: "/",
   });
   res.status(200).json({ token });
