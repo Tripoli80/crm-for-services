@@ -22,6 +22,7 @@ export const login = async (req, res, next) => {
   res.status(200).json({ token });
 };
 
+
 export const register = async (req, res, next) => {
   /*    #swagger.parameters['obj'] = {
                 in: 'body',

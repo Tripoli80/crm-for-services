@@ -30,6 +30,12 @@ const userSchema = new Schema({
     lowercase: true,
     trim: true,
   },
+  settings: {
+    language: { type: String, default: "UA" },
+    theme: { type: String, default: "light" },
+    notifications: { type: Boolean, default: true },
+    other: { type: Schema.Types.Mixed, default: {bla:"Додаєте любі філди та любі значення"} },
+  },
   customfield: { type: Schema.Types.Mixed },
   password: {
     type: String,

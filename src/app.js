@@ -42,8 +42,12 @@ const apiLimiter = rateLimit({
 // Apply the rate limiting middleware to API calls only
 
 const app = express();
-
-app.use(cors());
+// Настройки CORS
+const corsOptions = {
+  origin: '*', // Указывает, что запросы могут приходить с любого домена
+  credentials: true, // Указывает, что сервер может отправлять куки в ответ на запросы с другого домена
+};
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use("/api", apiLimiter);
 

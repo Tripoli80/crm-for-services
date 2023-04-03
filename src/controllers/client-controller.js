@@ -11,6 +11,7 @@ export const searchClient = async (req, res, next) => {
   const data = await clientService.searchClient({ query, page });
   res.status(200).json(data);
 };
+
 export const addClient = async (req, res, next) => {
   const { firstName, phone } = req.body;
   const { client, isNew } = await clientService.createClient({
