@@ -20,6 +20,8 @@ export const login = async (req, res, next) => {
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
+    sameSite: "lax", // Измените значение sameSite на 'lax' или 'strict'
+    secure: false,
     domain: "3.66.84.144",
     path: "/",
   });
@@ -58,6 +60,8 @@ export const refreshToken = async (req, res, next) => {
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
+    sameSite: "lax", // Измените значение sameSite на 'lax' или 'strict'
+    secure: false,
     domain: "3.66.84.144",
     path: "/",
   });
