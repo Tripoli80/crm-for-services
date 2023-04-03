@@ -1,10 +1,38 @@
-import express from "express";
+import * as dotenv from "dotenv";
+import mongoose from "mongoose";
 
-// Configure & Run the http server
-const app = express();
+import app from "./src/app.js";
 
-app.use(express.static("./src", { dotfiles: "allow" }));
+dotenv.config();
+const PORT = process.env.PORT || 3000;
+const MONGODB_URI = process.env.URL_DB;
 
-app.listen(80, () => {
-  console.log("HTTP server running on port 80");
-});
+async function connectToDatabase() {
+  try {
+    await mongoose.connect(MONGODB_URI);
+    console.log("Connected to database");
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+}
+
+// запуск сервера
+async function startServer() {
+  try {
+    app.listen(PORT);
+    console.log(`Server running on port ${PORT}`);
+  } catch (error) {
+    console.log(`Server not running. Error message: ${error.message}`);
+    process.exit(1);
+  }
+}
+
+// запускаем сервер и подключаемся к БД
+async function startApp() {
+  await connectToDatabase();
+  await startServer();
+}
+
+// стартуем приложение
+startApp();
