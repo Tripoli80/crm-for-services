@@ -20,6 +20,7 @@ export const login = async (req, res, next) => {
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
+    domain: "localhost:3000",
     secure: false, // для использования HTTPS
     path: "/",
     sameSite: "none", // разрешить доступ к кукам с других доменов
@@ -60,7 +61,7 @@ export const refreshToken = async (req, res, next) => {
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: false, // для использования HTTPS
-
+    domain: "localhost:3000",
     path: "/",
     sameSite: "none", // разрешить доступ к кукам с других доменов
   });
