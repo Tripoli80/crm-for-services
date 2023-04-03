@@ -22,6 +22,7 @@ export const login = async (req, res, next) => {
     httpOnly: true,
     domain: ["localhost:3000"],
     path: "/",
+    sameSite: "none", // разрешить доступ к кукам с других доменов
   });
   res.status(200).json({ token });
 };
@@ -60,6 +61,7 @@ export const refreshToken = async (req, res, next) => {
     httpOnly: true,
     domain: ["localhost:3000"],
     path: "/",
+    sameSite: "none", // разрешить доступ к кукам с других доменов
   });
   res.status(200).json({ token });
 };
