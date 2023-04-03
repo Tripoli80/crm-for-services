@@ -46,7 +46,7 @@ const app = express();
 const corsOptions = {
   credentials: true, // Указывает, что сервер может отправлять куки в ответ на запросы с другого домена
 };
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(cookieParser());
 app.use("/api", apiLimiter);
 
