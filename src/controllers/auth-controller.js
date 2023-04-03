@@ -18,10 +18,13 @@ export const login = async (req, res, next) => {
     password,
     userAgent,
   });
-  res.cookie("refreshToken", refreshToken, { httpOnly: true });
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    path: "/",
+    domain: ["localhost:3000", "yourotherdomain.com"],
+  });
   res.status(200).json({ token });
 };
-
 
 export const register = async (req, res, next) => {
   /*    #swagger.parameters['obj'] = {
