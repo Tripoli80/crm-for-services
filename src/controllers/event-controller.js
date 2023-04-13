@@ -1,3 +1,4 @@
+import clientService from "../services/client-service.js";
 import eventService from "../services/event-service.js";
 import { chekValidObjectID } from "../utils/index.js";
 
@@ -7,9 +8,21 @@ export const getAllEvents = async (req, res, next) => {
 };
 
 export const createEvent = async (req, res, next) => {
-  const { body } = req;
-  const { user } = req;
-  const data = {body, user };
+  const { body, user } = req;
+  const { client, firstName, phone } = body;
+  if (!client && firstName && phone) {
+    const { phone, firstName } = body;
+    const {
+      client: { _id },
+    } = await clientService.createClient({ phone, firstName });
+    body.client = _id;
+  }
+
+  if ((!client && !firstName) || (!client && !phone)) {
+    throw Error("Can not find field client or (phone and firstName)=> to creatre client");
+  }
+
+  const data = { body, user };
   const event = await eventService.createEvent(data);
   res.status(201).json(event);
 };

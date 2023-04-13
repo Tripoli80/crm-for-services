@@ -13,10 +13,9 @@ export const searchClient = async (req, res, next) => {
 };
 
 export const addClient = async (req, res, next) => {
-  const { firstName, phone } = req.body;
+  const body = req.body;
   const { client, isNew } = await clientService.createClient({
-    firstName,
-    phone,
+    ...body,
   });
   isNew ? res.status(201) : res.status(200);
   res.json(client);

@@ -54,17 +54,56 @@ clientService.searchClient = async ({ query = "", page = 1 }) => {
   return { clients, page, totalPages, totalClients };
 };
 
-
-clientService.createClient = async ({ phone, firstName }) => {
+clientService.createClient = async ({ phone, firstName, ...rest }) => {
+   
   const filter = { phone };
   let isNew = false;
   let client = await Client.findOne(filter);
   if (!client) {
-    client = new Client({ phone, firstName });
+    client = new Client({ phone, firstName, ...rest });
     await client.save();
     isNew = true;
   }
   return { client, isNew };
+};
+
+
+clientService.update = async ({ _id, ...rest }) => {
+  const session = await Client.startSession();
+  session.startTransaction();
+
+  try {
+    const filter = { _id };
+
+    // Проверяем наличие поля, которое нужно обновить
+    const validFields = Object.keys(rest).filter((field) =>
+      Client.schema.paths.hasOwnProperty(field)
+    );
+
+    if (validFields.length === 0) {
+      throw new Error("At least one valid field must be provided for update");
+    }
+
+    const update = { ...rest };
+     if (update.hasOwnProperty('events')) {
+      update.$addToSet = { events: update.events };
+      delete update.events;
+    }
+    const client = await Client.findOneAndUpdate(filter, update, {
+      new: true,
+    }).session(session);
+    if (!client) throw new Error("Client not found");
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return client;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    throw error;
+  }
 };
 
 clientService.checkAndCreate = async ({ phone, firstName }) => {
@@ -99,39 +138,6 @@ clientService.addEvents = async ({ clientId, eventId }) => {
     session.endSession();
 
     return client.events;
-  } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
-
-    throw error;
-  }
-};
-
-clientService.update = async ({ _id, ...rest }) => {
-  const session = await Client.startSession();
-  session.startTransaction();
-
-  try {
-    const filter = { _id };
-
-    // Проверяем наличие поля, которое нужно обновить
-    const validFields = Object.keys(rest).filter((field) =>
-      Client.schema.paths.hasOwnProperty(field)
-    );
-    if (validFields.length === 0) {
-      throw new Error("At least one valid field must be provided for update");
-    }
-
-    const update = { ...rest };
-    const client = await Client.findOneAndUpdate(filter, update, {
-      new: true,
-    }).session(session);
-    if (!client) throw new Error("Client not found");
-
-    await session.commitTransaction();
-    session.endSession();
-
-    return client;
   } catch (error) {
     await session.abortTransaction();
     session.endSession();

@@ -50,7 +50,9 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(cookieParser());
+
 app.use("/api", apiLimiter);
+
 
 app.use(bodyParser.json());
 

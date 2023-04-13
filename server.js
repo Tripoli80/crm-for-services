@@ -21,6 +21,8 @@ async function connectToDatabase() {
 async function startServer() {
   try {
     app.listen(PORT);
+    // app.listen(80);
+
     console.log(`Server running on port ${PORT}`);
   } catch (error) {
     console.log(`Server not running. Error message: ${error.message}`);
