@@ -10,6 +10,7 @@ export const getAllEvents = async (req, res, next) => {
 export const createEvent = async (req, res, next) => {
   const { body, user } = req;
   const { client, firstName, phone } = body;
+  const canCreateClient = firstName && phone;
   if (!client && firstName && phone) {
     const { phone, firstName } = body;
     const {
@@ -18,8 +19,10 @@ export const createEvent = async (req, res, next) => {
     body.client = _id;
   }
 
-  if ((!client && !firstName) || (!client && !phone)) {
-    throw Error("Can not find field client or (phone and firstName)=> to creatre client");
+  if (!client && !canCreateClient) {
+    throw Error(
+      "Can not find field client or (phone and firstName)=> to creatre client"
+    );
   }
 
   const data = { body, user };
