@@ -35,7 +35,10 @@ const auth = async (req, res, next) => {
 const refreshAuth = async (req, res, next) => {
   // Get the token from the request headers
   // const authHeader = req.headers["authorization"];
-   const token = req.cookies.refreshToken;
+  const token = req.cookies.refreshToken
+  ? req.cookies.refreshToken
+  : req.body.token;
+  
   //  if (!token) return res.sendStatus(401);
   // const token = authHeader?.split(" ")[1];
   
@@ -53,7 +56,7 @@ const refreshAuth = async (req, res, next) => {
           .status(403)
           .send({ message: "Forbidden: TokenExpired token" });
       } else {
-        return res.status(403).send({ message: "Forbidden: Invalid token" });
+        return res.status(403).send({ message: "Forbidden: Invalid token_" });
       }
     } else {
       const currentSession = await Session.findById(decoded.session);

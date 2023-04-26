@@ -25,7 +25,7 @@ export const login = async (req, res, next) => {
     domain: "3.66.84.144",
     path: "/",
   });
-  res.status(200).json({ token });
+  res.status(200).json({ token, refreshToken });
 };
 
 export const register = async (req, res, next) => {
@@ -65,5 +65,5 @@ export const refreshToken = async (req, res, next) => {
     domain: "3.66.84.144",
     path: "/",
   });
-  res.status(200).json({ token });
+  res.status(200).json({ token, refreshToken });
 };
