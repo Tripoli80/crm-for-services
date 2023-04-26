@@ -1,17 +1,39 @@
 import Event from "../models/event.js";
 import moment from "moment";
-import { chekValidObjectID } from "../utils/index.js";
+import { chekValidObjectID, isNumeric } from "../utils/index.js";
 
 const eventService = {};
 
-eventService.getAllEvents = async (user) => {
-  const events = await Event.find({ user })
+// eventService.getAllEvents = async (user) => {
+//   const events = await Event.find({ user })
+//     .populate("user")
+//     .populate("client")
+//     .populate("amount.currency");
+  
+//   return events
+// };
+eventService.getAllEvents = async ({user, page = 1, pageSize = 10}) => {
+  if (!isNumeric(page)) page = 1;
+  page = Number(page);
+  if (!isNumeric(pageSize)) pageSize = 10;
+  pageSize = Number(pageSize);
+
+  const filter = { user };
+  const totalEvents = await Event.countDocuments(filter);
+  const totalPages = Math.ceil(totalEvents / pageSize);
+  const skip = (page - 1) * pageSize;
+
+  const events = await Event.find(filter)
     .populate("user")
     .populate("client")
-    .populate("amount.currency");
-  
-  return events
+    .populate("amount.currency")
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(pageSize);
+
+  return { events, page, totalPages, totalEvents };
 };
+
 
 eventService.createEvent = async ({ body ,user }) => {
   const newEvent = new Event({ ...body, user });
