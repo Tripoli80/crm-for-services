@@ -15,7 +15,7 @@ export const createEvent = async (req, res, next) => {
     const { phone, firstName } = body;
     const {
       client: { _id },
-    } = await clientService.createClient({ phone, firstName });
+    } = await clientService.createClient({ user, phone, firstName });
     body.client = _id;
   }
 

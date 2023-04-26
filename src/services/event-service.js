@@ -14,7 +14,8 @@ eventService.getAllEvents = async (user) => {
 };
 
 eventService.createEvent = async ({ body ,user }) => {
-  const newEvent = new Event({...body, user });
+  const newEvent = new Event({ ...body, user });
+  
   const event = await newEvent.save();
   return event;
 };
