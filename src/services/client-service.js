@@ -3,13 +3,25 @@ import { isNumeric } from "../utils/index.js";
 
 const clientService = {};
 
-clientService.get = async (clientId) => {
-  const client = await Client.findById(clientId);
+clientService.createClient = async ({ phone, user, firstName, ...rest }) => {
+  const filter = { phone, user };
+  let isNew = false;
+  let client = await Client.findOne(filter);
+  if (!client) {
+    client = new Client({ phone, user, firstName, ...rest });
+    await client.save();
+    isNew = true;
+  }
+  return { client, isNew };
+};
+
+clientService.get = async ({ user, id }) => {
+  const client = await Client.findOne({ user, id });
   if (!client) throw new Error("Client not found");
   return client;
 };
 
-clientService.searchClient = async ({ query = "", page = 1 }) => {
+clientService.searchClient = async ({ user, query = "", page = 1 }) => {
   const PAGE_SIZE = 10;
   if (!isNumeric(page)) page = 1;
   page = Number(page);
@@ -31,49 +43,31 @@ clientService.searchClient = async ({ query = "", page = 1 }) => {
     filters.push({ "customfield.value": { $regex: query, $options: "i" } });
   }
 
-  const totalClients = await Client.countDocuments(
-    filters.length > 0 ? { $or: filters } : {}
-  );
+  const filter =
+    filters.length > 0 ? { $and: [{ user }, { $or: filters }] } : { user };
+
+  const totalClients = await Client.countDocuments(filter);
   const totalPages = Math.ceil(totalClients / PAGE_SIZE);
   const skip = (page - 1) * PAGE_SIZE;
 
   let clients = [];
 
-  if (filters.length > 0) {
-    clients = await Client.find({ $or: filters })
+
+    clients = await Client.find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(PAGE_SIZE);
-  } else {
-    clients = await Client.find({})
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(PAGE_SIZE);
-  }
+
 
   return { clients, page, totalPages, totalClients };
 };
 
-clientService.createClient = async ({ phone, firstName, ...rest }) => {
-   
-  const filter = { phone };
-  let isNew = false;
-  let client = await Client.findOne(filter);
-  if (!client) {
-    client = new Client({ phone, firstName, ...rest });
-    await client.save();
-    isNew = true;
-  }
-  return { client, isNew };
-};
-
-
-clientService.update = async ({ _id, ...rest }) => {
+clientService.update = async ({ _id, user, ...rest }) => {
   const session = await Client.startSession();
   session.startTransaction();
 
   try {
-    const filter = { _id };
+    const filter = { _id, user };
 
     // Проверяем наличие поля, которое нужно обновить
     const validFields = Object.keys(rest).filter((field) =>
@@ -85,7 +79,7 @@ clientService.update = async ({ _id, ...rest }) => {
     }
 
     const update = { ...rest };
-     if (update.hasOwnProperty('events')) {
+    if (update.hasOwnProperty("events")) {
       update.$addToSet = { events: update.events };
       delete update.events;
     }
@@ -106,19 +100,19 @@ clientService.update = async ({ _id, ...rest }) => {
   }
 };
 
-clientService.checkAndCreate = async ({ phone, firstName }) => {
-  const filter = { phone };
+clientService.checkAndCreate = async ({ phone, user, firstName }) => {
+  const filter = { phone, user };
   let isNew = false;
   let client = await Client.findOne(filter);
   if (!client) {
-    client = new Client({ phone, firstName });
+    client = new Client({ user, phone, firstName });
     await client.save();
     isNew = true;
   }
   return { client, isNew };
 };
 
-clientService.addEvents = async ({ clientId, eventId }) => {
+clientService.addEvents = async ({ clientId, user, eventId }) => {
   const session = await Client.startSession();
   session.startTransaction();
 
@@ -146,8 +140,8 @@ clientService.addEvents = async ({ clientId, eventId }) => {
   }
 };
 
-clientService.delete = async (clientId) => {
-  const deletedClient = await Client.findByIdAndRemove(clientId);
+clientService.delete = async ({ user, id }) => {
+  const deletedClient = await Client.findOneAndDelete({ user, _id: id });
   if (!deletedClient) {
     throw new Error("Client not found");
   }

@@ -1,4 +1,6 @@
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
+const { Schema, model } = mongoose;
+
 const clientSchema = new Schema(
   {
     firstName: {
@@ -11,7 +13,11 @@ const clientSchema = new Schema(
     phone: {
       type: String,
       required: true,
-      unique: true,
+    },
+    user: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "user",
+      required: true,
     },
     email: {
       type: String,
