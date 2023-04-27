@@ -6,7 +6,7 @@ export const getAllEvents = async (req, res, next) => {
   const { pageSize, page } = req.query;
   const { user } = req;
   const events = await eventService.getAllEvents({ user, pageSize , page});
-  res.status(200).json({ events });
+  res.status(200).json( events );
 };
 
 export const createEvent = async (req, res, next) => {

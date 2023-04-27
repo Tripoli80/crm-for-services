@@ -1,15 +1,6 @@
 import authService from "../services/auth-service.js";
 
 export const login = async (req, res, next) => {
-  /*    #swagger.parameters['obj'] = {
-                in: 'body',
-                description: 'Adding new user.',
-                schema: {
-                    $email: 'Jhon@mail.com',
-                    $password: "*******",
-                    about: ''
-                }
-        } */
   const { email, password } = req.body;
   const userAgent = req.headers["user-agent"];
 
@@ -29,15 +20,7 @@ export const login = async (req, res, next) => {
 };
 
 export const register = async (req, res, next) => {
-  /*    #swagger.parameters['obj'] = {
-                in: 'body',
-                description: 'Adding new user.',
-                schema: {
-                    $name: 'Jhon ввв Doe',
-                    $age: 29,
-                    about: ''
-                }
-        } */
+
   const { email, password, name } = req.body;
   const user = await authService.register(email, password, name);
   res.status(201).json({ user });

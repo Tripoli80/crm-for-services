@@ -4,14 +4,6 @@ import { chekValidObjectID, isNumeric } from "../utils/index.js";
 
 const eventService = {};
 
-// eventService.getAllEvents = async (user) => {
-//   const events = await Event.find({ user })
-//     .populate("user")
-//     .populate("client")
-//     .populate("amount.currency");
-  
-//   return events
-// };
 eventService.getAllEvents = async ({user, page = 1, pageSize = 10}) => {
   if (!isNumeric(page)) page = 1;
   page = Number(page);
